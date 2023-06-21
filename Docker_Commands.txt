@@ -1,0 +1,110 @@
+Install Docker in AWS Linux
+>>$ sudo yum update
+>>$ sudo yum install docker
+>>$sudo docker info
+
+start docker service
+>>$ sudo service docker start ; 
+>>$ sudo systemctl enable docker.service
+>>$ sudo systemctl status docker.service
+
+
+>>sudo docker images
+>>sudo docker pull postgres:latest 
+>> sudo docker run  -e POSTGRES_PASSWORD=password -d postgres:latest
+>>sudo docker ps
+
+When we are not providing name to container. Docker will give some random name.
+
+>>sudo docker run --name my-postgres -e POSTGRES_PASSWORD=password -d postgres:latest
+
+>>sudo docker run redis:6.2
+Ctrl+C sends a termination signal to the container and docker stop explicitly sends a stop signal to the container 
+>> docker stop containerid or name
+>> docker start containerid or name
+>>sudo docker ps –a
+>>sudo docker images
+
+Renaming image locally
+>>sudo docker tag <current_name>:<current_tag> <new_name>:<new_tag>
+>>sudo docker tag redis:6.2  my_redis:62
+
+Start a container
+>>docker start container_name
+
+Stop a container
+>>docker stop container_name
+
+Inspect a container 
+>>docker inspect container_name
+
+Access container logs
+>>docker logs container_name
+
+Execute a command inside a container
+>>docker exec -it container_name command
+
+Create Mutiple containers from the same image
+>>docker pull redis
+Create the first container from the image
+>> sudo docker run -d --name my_redis_container_1 redis
+>> sudo docker run -d --name my_redis_container_2 redis
+
+Each container has its own isolated runtime environment. You can interact with each container individually.
+
+>> sudo docker rm my_redis_container_1 
+>> sudo docker run  -d --name my_redis_container_1  redis
+>> sudo docker stop my_redis_container_1 
+>> sudo docker start my_redis_container_1 
+>> sudo docker exec -it my_redis_container_1  redis-cli INFO
+
+
+Apart from redis and postgres we can run other container image.
+>> docker run -d --name my_mysql -e MYSQL_ROOT_PASSWORD=password mysql
+
+Build docker image using the Dockerfile 
+>>docker build -t my-web-app .
+
+my-web-app image we will build using dockerfile,app.py and requiremnt.txt.
+
+
+>>sudo docker build -t my-web-app .
+>> sudo docker images
+>>sudo docker run -d -p 8080:5000 my-web-app
+>>http://<EC2-Public-DNS>:8080
+Make sure port 8080 (HTTP) to allow for inbound traffic in security group 
+
+
+
+Push and pull image in docker hub
+log in to Docker Hub before pushing an image
+
+>>docker login
+>> sudo docker tag my-web-app saurabh131990/my-web-app
+>> sudo docker push saurabh131990/my-web-app
+>> sudo docker tag my-web-app saurabh131990/my-web-app:1.0
+>> sudo docker push saurabh131990/my-web-app:1.0
+
+Saurabh131990 my Docker Hub username and my-web-app repository which create in docker hub account
+Remember to log in to Docker Hub only when you need to push your own images or access private images. 
+
+>>sudo docker pull your-username/my-private-image:v1.0
+
+
+
+Clean system
+
+>>sudo docker ps
+>>sudo docker stop <container-id>
+>>sudo docker rm <container-id>
+Or
+you can remove all stopped containers in one command
+>>sudo docker container prune
+>>sudo docker images
+>>sudo docker rmi <image-name>:<tag>
+you can remove all unused images in one command, that are not assscoiated with container.
+sudo docker image prune
+
+
+ 
+
